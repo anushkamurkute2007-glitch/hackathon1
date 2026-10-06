@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduNexa — Know your bunk budget before the exam cell does.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%233D5C6D'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial' font-weight='900' fill='white' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+--mist:#B4D5DC; --sky:#92B8C1; --teal:#65909D; --deep:#3D5C6D;
+--plum:#766993; --lav:#B8ABDC;
+--bg:#f3f7f8; --card:#ffffff; --line:#d4e3e7; --line2:#c8d9de;
+--ink:#2f3e48; --muted:#637a86; --muted2:#7a8f9a;
+--safe:#2f7a6b; --safebg:#e0efec; --warnbg:#e9e5f1; --crit:#b42318; --critbg:#fdeeee;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+a{color:var(--deep)}
+.app{display:flex;min-height:100vh}
+/* sidebar */
+.sidebar{width:282px;background:var(--deep);color:#fff;display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid #2e4a5a}
+.sidebar-brand{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.15)}
+.brand-row{display:flex;gap:12px;align-items:flex-start}
+.brand-mark{width:46px;height:46px;background:var(--plum);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;color:#fff;flex-shrink:0;border:1px solid rgba(255,255,255,.25)}
+.brand-title{font-weight:800;font-size:21px;line-height:1.1;letter-spacing:-.2px}
+.brand-live{font-size:10px;font-weight:800;background:var(--lav);color:#243c4d;padding:2px 6px;border-radius:6px;margin-left:6px;vertical-align:middle;letter-spacing:.3px}
+.brand-tag{font-size:11.5px;color:var(--mist);margin-top:4px;line-height:1.4}
+.sem-box{margin-top:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px}
+.sem-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#7ee2b8;margin-right:6px}
+.sem-bar{height:8px;background:rgba(255,255,255,.18);border-radius:999px;margin-top:8px;overflow:hidden}
+.sem-fill{height:100%;background:var(--mist);border-radius:999px}
+.sem-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;text-align:center}
+.sem-grid>div{background:rgba(255,255,255,.1);border-radius:8px;padding:6px 4px}
+.sem-num{font-weight:800;font-size:14px}
+.sem-lab{font-size:10px;color:var(--mist)}
+.sem-note{font-size:10.5px;color:var(--mist);margin-top:8px;line-height:1.4;opacity:.9}
+.side-nav{flex:1;padding:14px 12px;overflow-y:auto}
+.nav-label{font-size:11px;font-weight:700;color:var(--sky);margin:10px 6px 8px;letter-spacing:.4px}
+.nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--mist);cursor:pointer;font-weight:700;font-size:13px;text-align:left;margin-bottom:6px}
+.nav-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-btn.active{background:#fff;color:var(--deep);border-color:#fff}
+.nav-icon{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
+.nav-btn.active .nav-icon{background:var(--deep);color:#fff}
+.nav-grow{flex:1;text-align:left}
+.nav-badge{font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2)}
+.nav-btn.active .nav-badge{background:var(--deep);color:#fff;border-color:var(--deep)}
+.nav-badge.warn{background:#e8c35a;color:#243c4d;border-color:#e8c35a}
+.nav-badge.lav{background:var(--lav);color:#243c4d;border-color:var(--lav)}
+.role-select{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:10px;padding:10px 10px;font-size:12.5px;font-weight:600}
+.role-select option{color:#222}
+.insight-box{margin-top:14px;background:var(--plum);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px}
+.insight-title{font-weight:800;font-size:12.5px}
+.insight-text{font-size:11.5px;margin-top:6px;line-height:1.5;color:#eef0f7}
+.insight-btn{margin-top:10px;width:100%;background:#fff;color:var(--deep);border:0;border-radius:9px;padding:9px;font-weight:800;font-size:12px;cursor:pointer}
+.insight-btn:hover{background:var(--mist)}
+.side-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.15)}
+.palette-row{display:flex;gap:6px;align-items:center;margin-top:8px}
+.palette-dot{width:24px;height:24px;border-radius:7px;border:1px solid rgba(255,255,255,.4)}
+.side-foot-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--sky)}
+.link-btn{background:none;border:0;color:var(--lav);font-weight:700;font-size:11px;cursor:pointer;text-decoration:underline}
+/* main */
+.main-wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top-left{display:flex;gap:12px;align-items:center;min-width:0}
+.icon-btn{display:none;background:var(--deep);color:#fff;border:0;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer}
+.page-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.page-row h2{margin:0;font-size:19px;color:#1f2f38;letter-spacing:-.2px}
+.chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:#eaf2f4;color:var(--deep);border:1px solid var(--line)}
+.page-sub{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.top-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--deep);padding:8px 12px;border-radius:9px;font-weight:700;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#eaf3f5}
+.btn-primary{background:var(--deep);color:#fff;border-color:var(--deep)}
+.btn-primary:hover{background:#2f4b5a}
+.btn-plum{background:var(--plum);color:#fff;border-color:var(--plum)}
+.btn-plum:hover{background:#63567e}
+.btn-dashed{border-style:dashed;border-color:var(--plum);color:var(--plum)}
+.btn.full{width:100%;padding:11px}
+.dean-box{display:flex;gap:8px;align-items:center;border-left:1px solid var(--line);padding-left:12px;margin-left:4px}
+.dean-mark{width:34px;height:34px;border-radius:9px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.dean-title{font-size:12px;font-weight:800;color:#1f2f38;line-height:1.1}
+.dean-sub{font-size:11px;color:var(--muted)}
+.main{max-width:1200px;margin:0 auto;width:100%;padding:16px 18px 10px;flex:1}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi{border-top:3px solid var(--deep)}
+.kpi.k2{border-top-color:var(--teal)} .kpi.k3{border-top-color:var(--plum)} .kpi.k4{border-top-color:var(--crit)}
+.kpi-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.kpi-label{font-size:11px;font-weight:800;color:var(--teal)}
+.kpi.k3 .kpi-label{color:var(--plum)} .kpi.k4 .kpi-label{color:var(--crit)}
+.kpi-value{font-size:26px;font-weight:800;color:#1f2f38;margin:4px 0 2px;letter-spacing:-.5px}
+.kpi-value.green{color:var(--safe)} .kpi-value.plum{color:var(--plum)} .kpi-value.red{color:var(--crit)}
+.kpi-sub{font-size:11.5px;color:var(--muted);font-weight:600}
+.kpi-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;background:#eaf2f4;color:var(--deep);flex-shrink:0}
+.filters{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+@media(min-width:900px){.filters{flex-direction:row;justify-content:space-between;align-items:center}}
+.search-wrap{flex:1;max-width:420px}
+.search-wrap input{width:100%;padding:10px 12px;border:1px solid var(--line2);border-radius:10px;background:#f6fafb;font-size:13px}
+.search-wrap input:focus{outline:2px solid var(--teal);background:#fff}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap}
+.filter-row select{border:1px solid var(--line2);border-radius:10px;padding:9px 10px;font-size:12.5px;font-weight:700;color:var(--deep);background:#fff}
+.students-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:14px;align-items:start}
+.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding-bottom:10px;border-bottom:1px solid #eef3f4;margin-bottom:0}
+.card-head h3{margin:0;font-size:15px;color:#1f2f38}
+.card-head p{margin:4px 0 0;font-size:11.5px;color:var(--muted)}
+.count-tag{font-size:11px;font-weight:800;background:var(--deep);color:#fff;padding:6px 10px;border-radius:9px;white-space:nowrap}
+.table-wrap{overflow-x:auto;margin:0 -14px;padding:0 0 4px}
+table{width:100%;border-collapse:collapse;min-width:640px;font-size:12.5px}
+thead th{background:#eef5f7;color:var(--deep);font-size:11px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:800}
+thead th.center{text-align:center}
+tbody td{padding:10px 12px;border-bottom:1px solid #eef3f4;vertical-align:middle}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#f2f8f9}
+tbody tr.selected{background:#eaf3f5;border-left:4px solid var(--deep)}
+.stu-name{font-weight:800;color:#1f2f38;font-size:13px}
+.stu-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:6px;align-items:center}
+.dept-pill{font-size:10px;font-weight:800;color:#fff;padding:2px 6px;border-radius:6px}
+.pct-big{font-weight:800;font-size:14px;text-align:center}
+.pct-small{font-size:10.5px;color:var(--muted2);text-align:center}
+.budget-pill{display:inline-block;font-size:11px;font-weight:800;padding:4px 8px;border-radius:7px;border:1px solid}
+.budget-pos{background:#e6f0f2;color:#2f6b7a;border-color:#9fc3cc}
+.budget-zero{background:var(--warnbg);color:var(--plum);border-color:#c9c0dd}
+.budget-neg{background:var(--critbg);color:var(--crit);border-color:#e8a5a5}
+.rec-ok{color:var(--muted2);font-size:11px} .rec-need{color:var(--crit);font-weight:800;font-size:11px}
+.status-pill{display:inline-block;font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:999px}
+.st-safe{background:var(--safebg);color:#245e53} .st-warn{background:var(--warnbg);color:#5b4e7a} .st-crit{background:var(--critbg);color:var(--crit)} .st-det{background:var(--crit);color:#fff}
+.mini-btn{font-size:11px;font-weight:800;padding:6px 10px;border-radius:7px;border:1px solid var(--line2);background:#eef5f7;color:var(--deep);cursor:pointer}
+.mini-btn.active{background:var(--deep);color:#fff;border-color:var(--deep)}
+.detail-card{position:sticky;top:78px}
+.detail-head{display:flex;justify-content:space-between;gap:10px;padding-bottom:12px;border-bottom:1px solid #eef3f4}
+.detail-id{display:flex;gap:10px;align-items:center}
+.avatar{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;background:var(--deep)}
+.detail-name{font-weight:800;font-size:15px;color:#1f2f38}
+.detail-sub{font-size:11px;color:var(--muted)}
+.detail-pct{text-align:right}
+.detail-pct-big{font-size:22px;font-weight:800}
+.detail-pct-lab{font-size:10px;color:var(--muted2);font-weight:700}
+.hero{border-radius:12px;padding:14px;margin-top:12px;color:#fff;border:1px solid rgba(0,0,0,.08)}
+.hero.safe{background:var(--deep)} .hero.zero{background:var(--plum)} .hero.neg{background:#7a2e35}
+.hero-tag{display:inline-block;font-size:10.5px;font-weight:800;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:7px;border:1px solid rgba(255,255,255,.2)}
+.hero-title{font-size:20px;font-weight:800;margin:8px 0 2px;line-height:1.2}
+.hero-sub{font-size:12px;opacity:.92}
+.sim-box{margin-top:12px;background:#eef5f7;border:1px solid var(--line);border-radius:12px;padding:12px}
+.sim-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sim-title{font-size:11px;font-weight:800;color:var(--deep)}
+.sim-label{font-size:11px;font-weight:800;background:#fff;border:1px solid var(--line);padding:3px 8px;border-radius:7px}
+input[type=range]{width:100%;height:8px;border-radius:999px;background:var(--mist);outline:none;border:1px solid var(--line2)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--deep);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--deep);cursor:pointer}
+.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sim-cell{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+.sim-cap{font-size:10px;font-weight:700;color:var(--muted)}
+.sim-val{font-weight:800;font-size:15px}
+.short-box{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.short-title{font-size:11px;font-weight:800;color:var(--deep);margin-bottom:6px}
+.short-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
+.short-cell{background:#f6fafb;border:1px solid #e6eef0;border-radius:8px;padding:8px}
+.calc-box{margin-top:12px;background:#f6fafb;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:11.5px;color:#3a4d59}
+.calc-box code{font-family:ui-monospace,Menlo,monospace;background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:5px}
+.subj-list{margin-top:8px;display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;padding-right:2px}
+.subj{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fbfefe}
+.subj.bad{background:#fff5f5;border-color:#e8a5a5}
+.subj-head{display:flex;justify-content:space-between;font-size:12px;font-weight:800;margin-bottom:6px}
+.bar{height:6px;background:#e6eef0;border-radius:999px;overflow:hidden;margin-bottom:6px}
+.bar-fill{height:100%;border-radius:999px;background:var(--deep)}
+.bar-fill.bad{background:var(--crit)} .bar-fill.warn{background:var(--plum)}
+.subj-foot{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:600}
+.trend-caption{font-size:10.5px;color:var(--muted);margin-top:6px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.contact-cell{border:1px solid var(--line);border-radius:9px;padding:8px;background:#fbfefe;font-size:11px}
+.contact-cell b{display:block;color:var(--muted);font-size:10px;margin-bottom:2px}
+/* alerts */
+.alerts-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid #eef3f4;margin-bottom:14px}
+.alerts-head h3{margin:0;font-size:16px} .alerts-head p{margin:6px 0 0;font-size:12px;color:var(--muted);max-width:640px}
+.alerts-grid{display:grid;grid-template-columns:1fr 2fr;gap:14px}
+.queue-box{background:#f6fafb;border:1px solid var(--line);border-radius:12px;padding:12px}
+.queue-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;font-weight:800;color:var(--deep)}
+.mini-badge{font-size:10px;font-weight:800;background:var(--critbg);color:var(--crit);border:1px solid #e8a5a5;padding:3px 8px;border-radius:999px}
+.queue-list{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow-y:auto;padding-right:2px}
+.queue-item{border:1px solid #e2e8ea;background:#fff;border-radius:10px;padding:10px;cursor:pointer}
+.queue-item.sel{background:#ede9f3;border-color:var(--plum)}
+.queue-item-top{display:flex;justify-content:space-between;font-weight:800;font-size:13px}
+.queue-item-sub{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+.preview-box{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}
+.preview-head{display:flex;justify-content:space-between;gap:8px;align-items:center;padding-bottom:10px;border-bottom:1px solid #eef3f4;margin-bottom:10px;flex-wrap:wrap}
+.preview-head span:first-child{font-weight:800;font-size:13px}
+.stamp{font-size:11px;font-weight:700;background:var(--warnbg);color:var(--plum);border:1px solid #c9c0dd;padding:4px 8px;border-radius:7px}
+.preview-body{background:#f6fafb;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:11.5px;line-height:1.6;white-space:pre-wrap;min-height:340px;margin:0}
+.preview-foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.preview-actions{display:flex;gap:8px}
+.audit-section{margin-top:16px;border-top:1px solid #eef3f4;padding-top:12px}
+.audit-section h4{margin:0 0 8px;font-size:11px;color:var(--deep)}
+.audit-log{background:var(--deep);color:var(--mist);border-radius:10px;padding:12px;font-size:11.5px;max-height:160px;overflow-y:auto;border:1px solid #2e4a5a}
+/* condonation */
+.condon-grid{display:grid;grid-template-columns:5fr 7fr;gap:14px;align-items:start}
+.condon-grid h3{margin:0;font-size:15px} .condon-grid p.desc{font-size:12px;color:var(--muted);margin:6px 0 12px}
+label.lbl{display:block;font-size:11px;font-weight:800;color:var(--deep);margin:12px 0 6px}
+select.input,input.input,textarea.input{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px;font-size:12.5px;background:#fff}
+select.input:focus,input.input:focus,textarea.input:focus{outline:2px solid var(--plum)}
+.meta-box{background:#f1edf7;border:1px solid #c9c0dd;border-radius:12px;padding:10px 12px;font-size:12px;margin-top:10px}
+.meta-row{display:flex;justify-content:space-between;padding:3px 0;font-weight:600;color:#4a5a66}
+.dossier{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcfd;margin-bottom:12px}
+.dossier-head{display:flex;justify-content:space-between;gap:10px;padding-bottom:10px;border-bottom:1px solid #e6eef0;margin-bottom:10px;flex-wrap:wrap}
+.dossier-name{font-weight:800} .dossier-id{font-size:10.5px;background:var(--warnbg);color:#5b4e7a;padding:2px 7px;border-radius:6px;border:1px solid #c9c0dd;margin-left:6px}
+.dossier-sub{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dossier-pct{text-align:right;font-weight:800;font-size:18px;color:var(--plum)} .dossier-fee{font-size:11px;color:var(--safe);font-weight:700}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.step{border:1px solid #e2e8ea;border-radius:10px;padding:10px;background:#fff;font-size:11.5px}
+.step.ok{background:#eef6f3;border-color:#a8c9c0} .step.no{background:#fff1f1;border-color:#e8a5a5}
+.step-head{display:flex;justify-content:space-between;font-weight:800;margin-bottom:4px}
+.step-actions{display:flex;gap:6px;margin-top:8px}
+.step-actions button{flex:1;border:0;border-radius:7px;padding:7px;font-size:11px;font-weight:800;cursor:pointer;color:#fff}
+.btn-approve{background:var(--safe)} .btn-reject{background:var(--crit)} .btn-sanction{background:var(--deep)}
+.dossier-note{font-size:11.5px;color:#4a5a66;background:#fff;border:1px solid #e6eef0;border-radius:9px;padding:8px 10px;margin-top:10px;font-style:italic}
+/* reports */
+.dept-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.dept-card{border-top:4px solid var(--deep)}
+.dept-card h4{margin:0;font-size:15px} .dept-avg{font-weight:800}
+.dept-sub{font-size:11px;color:var(--muted);margin:2px 0 8px}
+.dept-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center;font-size:11px;font-weight:800}
+.dept-mini div{padding:6px;border-radius:7px}
+.reports-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.legend{display:flex;gap:12px;justify-content:center;font-size:11.5px;font-weight:700;margin-top:8px}
+.legend span{display:flex;gap:6px;align-items:center}
+.legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.dept-bar-row{display:grid;grid-template-columns:64px 1fr 56px;gap:10px;align-items:center;margin-bottom:12px;font-size:12px;font-weight:700}
+.dept-bar-track{height:14px;background:#eef3f4;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.dept-bar-fill{height:100%;border-radius:999px}
+/* footer */
+.footer{margin-top:18px;border-top:1px solid var(--line);background:#fff}
+.footer-inner{max-width:1200px;margin:0 auto;padding:14px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(31,47,56,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal.hidden{display:none}
+.modal-box{background:#fff;border-radius:14px;max-width:880px;width:100%;max-height:90vh;display:flex;flex-direction:column;border:1px solid var(--line);overflow:hidden}
+.modal-head{background:var(--deep);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal-head h2{margin:0;font-size:15px} .modal-head p{margin:2px 0 0;font-size:11.5px;color:var(--mist)}
+.modal-close{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:8px 12px;font-weight:700;cursor:pointer}
+.modal-body{padding:16px;overflow-y:auto;font-size:13px;color:#33434e}
+.modal-body h3{font-size:14px;color:#1f2f38;margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid #e6eef0}
+.modal-body h3:first-child{margin-top:0}
+.modal-foot{padding:12px 16px;border-top:1px solid var(--line);background:#f6fafb;text-align:right}
+.palette-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:10px 0}
+.palette-cell{border:1px solid var(--line);border-radius:9px;overflow:hidden;text-align:center}
+.palette-swatch{height:44px}
+.palette-cell div:last-child{padding:6px;font-size:10.5px}
+.code-block{background:#243c4d;color:#d7e8ec;border-radius:10px;padding:12px;font-size:11.5px;overflow-x:auto;line-height:1.6}
+.info-box{background:#eef5f7;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
+ol.steps{padding-left:18px} ol.steps li{margin-bottom:6px}
+/* toast */
+#toast-wrap{position:fixed;bottom:16px;right:16px;z-index:70;display:flex;flex-direction:column;gap:8px;max-width:340px;width:calc(100% - 32px)}
+.toast{background:#fff;border:1px solid var(--line);border-left:4px solid var(--deep);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.toast.ok{border-left-color:var(--safe)} .toast.warn{border-left-color:var(--plum)} .toast.err{border-left-color:var(--crit)}
+.toast b{font-size:12.5px;display:block} .toast small{font-size:11px;color:var(--muted)}
+.hidden{display:none!important}
+.tab-pane{animation:fade .3s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1024px){
+.app{flex-direction:column}
+.sidebar{width:100%}
+.side-nav{display:block}
+.students-grid,.alerts-grid,.condon-grid,.reports-charts{grid-template-columns:1fr}
+.kpi-grid{grid-template-columns:1fr 1fr}
+.dept-cards{grid-template-columns:1fr 1fr}
+.detail-card{position:static}
+.icon-btn{display:inline-block}
+.dean-box{display:none}
+.steps{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+.kpi-grid{grid-template-columns:1fr}
+.dept-cards{grid-template-columns:1fr}
+.topbar-inner{flex-direction:column;align-items:stretch}
+.top-right{flex-wrap:wrap}
+.palette-grid{grid-template-columns:repeat(3,1fr)}
+.contact-grid,.sim-grid,.short-grid{grid-template-columns:1fr}
+table{min-width:560px}
+}
+@media print{.sidebar,.topbar,.footer,#toast-wrap,.no-print{display:none!important}body{background:#fff}.main-wrap{margin:0}.main{padding:0}}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- sidebar -->
+<aside id="sidebar" class="sidebar">
+<div class="sidebar-brand">
+<div class="brand-row">
+<div class="brand-mark">E</div>
+<div>
+<div class="brand-title">EduNexa<span class="brand-live">Live v3</span></div>
+<div class="brand-tag">Know your bunk budget before the exam cell does.</div>
+</div>
+</div>
+<div class="sem-box">
+<div class="sem-top"><span><span class="dot"></span>Week 8 of 16</span><span class="mono">50%</span></div>
+<div class="sem-bar"><div class="sem-fill" style="width:50%"></div></div>
+<div class="sem-grid">
+<div><div class="sem-num">256</div><div class="sem-lab">Total</div></div>
+<div><div class="sem-num">128</div><div class="sem-lab">Done</div></div>
+<div><div class="sem-num">75%</div><div class="sem-lab">Target</div></div>
+</div>
+<div class="sem-note">Mid term audit. 64 per subject. 32 conducted per subject. 4 classes per subject per week.</div>
+</div>
+</div>
+<nav class="side-nav">
+<div class="nav-label">Command center</div>
+<button onclick="switchTab('students')" id="nav-btn-students" class="nav-btn active"><span class="nav-icon">S</span><span class="nav-grow">Students ledger</span><span id="badge-total-students" class="nav-badge">12</span></button>
+<button onclick="switchTab('alerts')" id="nav-btn-alerts" class="nav-btn"><span class="nav-icon">W</span><span class="nav-grow">Early warnings</span><span id="badge-alert-count" class="nav-badge warn">9</span></button>
+<button onclick="switchTab('condonation')" id="nav-btn-condonation" class="nav-btn"><span class="nav-icon">C</span><span class="nav-grow">Condonation portal</span><span id="badge-condon-count" class="nav-badge lav">2</span></button>
+<button onclick="switchTab('reports')" id="nav-btn-reports" class="nav-btn"><span class="nav-icon">R</span><span class="nav-grow">Department reports</span><span class="nav-badge">4</span></button>
+<div class="nav-label">Viewing as</div>
+<select id="role-select" class="role-select" onchange="updateRoleView()">
+<option value="all">All authorities (superview)</option>
+<option value="student">Student self service</option>
+<option value="mentor">Faculty mentor</option>
+<option value="hod">Head of department</option>
+<option value="exam_cell">Exam cell and dean</option>
+</select>
+<div class="insight-box">
+<div class="insight-title">Nexa insight</div>
+<div class="insight-text">3 students will breach 75% if they miss 2 more labs. Dispatch warnings before Friday.</div>
+<button class="insight-btn" onclick="switchTab('alerts')">Review at risk queue</button>
+</div>
+</nav>
+<div class="side-foot">
+<div class="side-foot-top"><span>Edunexa palette</span><button class="link-btn" onclick="openDocsModal()">Guide</button></div>
+<div class="palette-row">
+<span class="palette-dot" title="#B4D5DC" style="background:#B4D5DC"></span>
+<span class="palette-dot" title="#92B8C1" style="background:#92B8C1"></span>
+<span class="palette-dot" title="#65909D" style="background:#65909D"></span>
+<span class="palette-dot" title="#3D5C6D" style="background:#3D5C6D"></span>
+<span class="palette-dot" title="#766993" style="background:#766993"></span>
+<span class="palette-dot" title="#B8ABDC" style="background:#B8ABDC"></span>
+<span class="mono" style="margin-left:auto;font-size:10px;color:#92B8C1">v3.0</span>
+</div>
+</div>
+</aside>
+
+<!-- main -->
+<div class="main-wrap">
+<header class="topbar">
+<div class="topbar-inner">
+<div class="top-left">
+<button class="icon-btn" onclick="document.getElementById('sidebar').scrollIntoView()">Menu</button>
+<div>
+<div class="page-row"><h2 id="page-title">Students ledger</h2><span class="chip">Mid term audit. Week 8</span></div>
+<p id="page-subtitle" class="page-sub">Ranked by risk and bunk vulnerability. 12 students monitored.</p>
+</div>
+</div>
+<div class="top-right">
+<input type="file" id="csv-file-input" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
+<button class="btn" onclick="document.getElementById('csv-file-input').click()">Import</button>
+<button class="btn" onclick="exportToCSV()">Export</button>
+<button class="btn btn-primary" onclick="openDocsModal()">Docs and logic</button>
+<div class="dean-box"><div class="dean-mark">D</div><div><div class="dean-title">Dean office</div><div class="dean-sub">Exam cell admin</div></div></div>
+</div>
+</div>
+</header>
+
+<main class="main">
+<section class="kpi-grid">
+<div class="card kpi"><div class="kpi-top"><div><div class="kpi-label">Cohort attendance</div><div id="stat-cohort-avg" class="kpi-value">77.8%</div><div class="kpi-sub">128 of 256 hours conducted</div></div><div class="kpi-icon">%</div></div></div>
+<div class="card kpi k2"><div class="kpi-top"><div><div class="kpi-label">Safe zone. 8 plus</div><div id="stat-safe-count" class="kpi-value green">3</div><div class="kpi-sub">Can afford bunks</div></div><div class="kpi-icon">S</div></div></div>
+<div class="card kpi k3"><div class="kpi-top"><div><div class="kpi-label">Trending down</div><div id="stat-warn-count" class="kpi-value plum">6</div><div class="kpi-sub">Budget below 8 or falling</div></div><div class="kpi-icon">W</div></div></div>
+<div class="card kpi k4"><div class="kpi-top"><div><div class="kpi-label">Critical. Below 75%</div><div id="stat-critical-count" class="kpi-value red">3</div><div class="kpi-sub">Mandatory makeup</div></div><div class="kpi-icon">!</div></div></div>
+</section>
+
+<!-- students -->
+<div id="tab-content-students" class="tab-pane">
+<div class="card filters">
+<div class="search-wrap"><input type="text" id="search-input" onkeyup="filterStudents()" placeholder="Search name, roll number, mentor or department"></div>
+<div class="filter-row">
+<select id="filter-dept" onchange="filterStudents()"><option value="ALL">All departments (4)</option><option value="CSE">CSE</option><option value="IT">IT</option><option value="ECE">ECE</option><option value="MECH">MECH</option></select>
+<select id="filter-status" onchange="filterStudents()"><option value="ALL">All statuses</option><option value="SAFE">Safe zone (8 plus)</option><option value="WARNING">Warning. Trending down</option><option value="CRITICAL">Critical (below 75%)</option><option value="DETENTION">Detention risk (below 65%)</option></select>
+<select id="sort-by" onchange="filterStudents()"><option value="urgency">Sort: urgency first</option><option value="pct_asc">Attendance: low to high</option><option value="pct_desc">Attendance: high to low</option><option value="budget_asc">Bunk budget: lowest first</option><option value="name_asc">Name: a to z</option></select>
+<button class="btn btn-dashed" onclick="downloadSampleCSV()">Sample CSV</button>
+</div>
+</div>
+<div class="students-grid">
+<div class="card">
+<div class="card-head"><div><h3>Student urgency ledger</h3><p>Click any row to inspect bunk math and recovery plan.</p></div><span id="filtered-count-tag" class="count-tag">Showing 12 of 12</span></div>
+<div class="table-wrap"><table><thead><tr><th>Student and department</th><th class="center">Current %</th><th class="center">Bunk budget</th><th class="center">Recovery</th><th class="center">Status</th><th style="text-align:right">Action</th></tr></thead><tbody id="student-table-body"></tbody></table></div>
+</div>
+<div><div id="detail-card" class="card detail-card"></div></div>
+</div>
+</div>
+
+<!-- alerts -->
+<div id="tab-content-alerts" class="hidden tab-pane">
+<div class="card">
+<div class="alerts-head">
+<div><h3>Early warning notice dispatcher</h3><p>Zero latency warning system. Generates formal mentor, student and parent communications with exact bunk budget math and recovery directives.</p></div>
+<button class="btn btn-primary" onclick="dispatchAllAlerts()">Dispatch all risk alerts (<span id="dispatch-risk-count">9</span>)</button>
+</div>
+<div class="alerts-grid">
+<div class="queue-box">
+<div class="queue-head"><span>At risk queue</span><span class="mini-badge">Action required</span></div>
+<div id="alerts-queue-list" class="queue-list"></div>
+</div>
+<div class="preview-box">
+<div class="preview-head"><span>Official communication preview</span><span id="alert-preview-stamp" class="stamp">Select a student</span></div>
+<pre id="alert-preview-body" class="preview-body">Select a student from the left queue to preview the automated early warning draft.</pre>
+<div class="preview-foot"><span>Includes direct bunk budget breakdown</span><div class="preview-actions"><button class="btn" onclick="copyAlertText()">Copy notice</button><button class="btn btn-plum" onclick="sendSingleAlert()">Simulate mentor dispatch</button></div></div>
+</div>
+</div>
+<div class="audit-section"><h4>Live dispatch audit trail</h4><div id="dispatch-log" class="audit-log"><div>[System initialised] Week 8 mid term snapshot loaded. 12 student records monitored by Edunexa engine.</div></div></div>
+</div>
+</div>
+
+<!-- condonation -->
+<div id="tab-content-condonation" class="hidden tab-pane">
+<div class="condon-grid">
+<div class="card">
+<h3>Apply for condonation</h3>
+<p class="desc">Eligible for 65.0% to 74.9% with certified medical, sports or emergency justification. Statutory fee Rs. 1500.</p>
+<form id="condonation-form" onsubmit="handleCondonationSubmit(event)">
+<label class="lbl" for="condon-student-select">Select candidate student</label>
+<select id="condon-student-select" class="input" onchange="updateCondonationFormPreview()" required></select>
+<div class="meta-box">
+<div class="meta-row"><span>Current percentage:</span><span id="condon-meta-pct" style="font-weight:800;color:#766993">--</span></div>
+<div class="meta-row"><span>Deficit below 75%:</span><span id="condon-meta-deficit" style="font-weight:800;color:#b42318">--</span></div>
+<div class="meta-row"><span>Prescribed fee:</span><span style="font-weight:800">Rs. 1500.00. Paid</span></div>
+</div>
+<label class="lbl" for="condon-reason">Reason for shortage</label>
+<select id="condon-reason" class="input" required>
+<option value="Medical illness and hospitalisation">Medical illness (hospital certified)</option>
+<option value="University sports and NCC camp">University and state sports and NCC camp</option>
+<option value="Family emergency and bereavement">Family emergency and bereavement</option>
+<option value="Official tech symposium and hackathon">Official college tech symposium and hackathon</option>
+</select>
+<label class="lbl" for="condon-docs">Document proof reference</label>
+<input type="text" id="condon-docs" class="input mono" placeholder="e.g. MED-CERT-2024-8849 or OD-NSS-442" required>
+<label class="lbl" for="condon-remarks">Student statement and recovery plan</label>
+<textarea id="condon-remarks" class="input" rows="2" placeholder="Explain circumstances and commitment to attend all remaining 128 hours." required></textarea>
+<div style="margin-top:12px"><button type="submit" class="btn btn-plum full">Submit condonation dossier</button></div>
+</form>
+</div>
+<div class="card">
+<div class="card-head"><div><h3>Multi stage approval pipeline</h3><p>3 tier verification: mentor to HOD to exam cell sanction.</p></div><span id="condon-pipeline-count" class="chip">2 in pipeline</span></div>
+<div id="condonation-dossier-list" style="margin-top:12px"></div>
+</div>
+</div>
+</div>
+
+<!-- reports -->
+<div id="tab-content-reports" class="hidden tab-pane">
+<div id="dept-summary-cards" class="dept-cards"></div>
+<div class="card">
+<div class="card-head"><div><h3>Departmental risk and attendance audit</h3><p>Aggregated breakdown across CSE, IT, ECE and MECH.</p></div><button class="btn no-print" onclick="printReport()">Print summary</button></div>
+<div class="table-wrap"><table><thead><tr><th>Department</th><th class="center">Enrolled</th><th class="center">Average %</th><th class="center">Safe</th><th class="center">Warning</th><th class="center">Critical</th><th class="center">Condonation</th><th class="center">Detention</th></tr></thead><tbody id="dept-table-body"></tbody></table></div>
+</div>
+<div class="reports-charts">
+<div class="card"><h3 style="margin:0 0 10px;font-size:14px">Cohort risk distribution</h3><div id="risk-chart-wrap"></div><div class="legend"><span><i style="background:#65909D"></i>Safe</span><span><i style="background:#766993"></i>Warning</span><span><i style="background:#b42318"></i>Critical</span></div></div>
+<div class="card"><h3 style="margin:0 0 10px;font-size:14px">Department attendance comparison (%)</h3><div id="dept-chart-wrap"></div><p style="font-size:11px;color:var(--muted)">Bars show average attendance per department. Reference line is 75%.</p></div>
+</div>
+</div>
+
+</main>
+<footer class="footer no-print">
+<div class="footer-inner">
+<div>EduNexa attendance engine. Semester 2024-25 (mid term audit).</div>
+<div><button class="link-btn" style="color:#766993" onclick="openDocsModal()">Formula and logic guide</button> &nbsp;.&nbsp; <button class="link-btn" style="color:#b42318" onclick="resetDefaultData()">Reset memory</button></div>
+</div>
+</footer>
+</div>
+</div>
+
+<!-- docs modal : readme -->
+<div id="docs-modal" class="modal hidden">
+<div class="modal-box">
+<div class="modal-head"><div><h2>EduNexa documentation and readme</h2><p>Bunk budget mathematics. Hosting. Code walkthrough.</p></div><button class="modal-close" onclick="closeDocsModal()">Close</button></div>
+<div class="modal-body">
+<h3>Brand palette (applied across ui)</h3>
+<div class="palette-grid">
+<div class="palette-cell"><div class="palette-swatch" style="background:#B4D5DC"></div><div><b>Mist</b><br><span class="mono">#B4D5DC</span></div></div>
+<div class="palette-cell"><div class="palette-swatch" style="background:#92B8C1"></div><div><b>Glacier</b><br><span class="mono">#92B8C1</span></div></div>
+<div class="palette-cell"><div class="palette-swatch" style="background:#65909D"></div><div><b>Teal slate</b><br><span class="mono">#65909D</span></div></div>
+<div class="palette-cell"><div class="palette-swatch" style="background:#3D5C6D"></div><div><b>Deep harbor</b><br><span class="mono">#3D5C6D</span></div></div>
+<div class="palette-cell"><div class="palette-swatch" style="background:#766993"></div><div><b>Plum</b><br><span class="mono">#766993</span></div></div>
+<div class="palette-cell"><div class="palette-swatch" style="background:#B8ABDC"></div><div><b>Lavender</b><br><span class="mono">#B8ABDC</span></div></div>
+</div>
+<div class="info-box">Deep harbor anchors navigation and primary actions. Teal slate drives data accents. Mist and glacier soften surfaces. Plum and lavender highlight warnings, condonation and insights. Design uses solid colours only, sentence case, no gradients, no shadows and no emojis to look like practical college software.</div>
+
+<h3>Readme for beginners. What is Edunexa</h3>
+<p>Edunexa treats attendance like a budget. Instead of showing only past percentage, it shows how many classes you can still miss (bunk budget) or how many you must attend to recover. Tagline: Know your bunk budget before the exam cell does.</p>
+<p>Problem solved: shortages are often discovered just before exams, with no advance warning to students, mentors and parents. Edunexa gives early warnings in week 8 of a 16 week semester.</p>
+<p>Users: students (self check and what if simulator), mentors (counselling queue), HODs (department view and approvals), exam cell (final sanction and hall ticket control).</p>
+<p>Tech: one file called <span class="mono">index.html</span> with plain HTML, CSS in a <span class="mono">style</span> tag and vanilla JavaScript in a <span class="mono">script</span> tag. No build step, no backend, no local storage. All data stays in memory in JavaScript arrays.</p>
+<p>Sample data: 12 students across 4 departments (CSE, IT, ECE, MECH), each with a mentor, 4 subjects (ML, OS, DSA, Maths), 4 classes per subject per week, 16 weeks total, 8 weeks completed. Includes 3 safe students, 3 students below 75% and 6 students above 75% but trending down.</p>
+
+<h3>How to open the project (double click)</h3>
+<ol class="steps">
+<li>Save the file as <span class="mono">index.html</span> on your computer.</li>
+<li>Double click <span class="mono">index.html</span>. It opens in Chrome, Edge or Firefox.</li>
+<li>No internet needed. No install needed. If tables do not load, try another browser.</li>
+<li>To edit, right click the file, open with Notepad or VS Code, then save and refresh the browser.</li>
+</ol>
+
+<h3>How to host free on Netlify Drop</h3>
+<ol class="steps">
+<li>Go to <span class="mono">app.netlify.com/drop</span> and sign in (free).</li>
+<li>Put <span class="mono">index.html</span> inside a folder named <span class="mono">edunexa</span>.</li>
+<li>Drag that folder onto the Netlify Drop page.</li>
+<li>Wait 10 seconds. You get a live link like <span class="mono">edunexa-123.netlify.app</span>. Share it.</li>
+<li>To update, drag the folder again.</li>
+</ol>
+
+<h3>How to host free on GitHub Pages</h3>
+<ol class="steps">
+<li>Create a free GitHub account and a new repository named <span class="mono">edunexa</span>.</li>
+<li>Upload <span class="mono">index.html</span> to the repository.</li>
+<li>Go to settings, then pages, then deploy from branch, select <span class="mono">main</span> and folder <span class="mono">root</span>, then save.</li>
+<li>After 1 minute your site is live at <span class="mono">yourname.github.io/edunexa</span>.</li>
+</ol>
+
+<h3>How projection calculations work</h3>
+<p>Standard portals show the past. Edunexa projects the full 16 week semester so students know the future.</p>
+<div class="info-box">
+<b>Variables:</b><br>
+A = attended so far. C = conducted so far. R = remaining classes. N = total semester = 256. T = target = 0.75 (75%).<br><br>
+<b>Core formulae:</b><br>
+Current % = (A / C) x 100<br>
+Bunk budget (B) = (A + R) - 0.75 x N. Rounded down.<br>
+Recovery (K) = (0.75 x C - A) / 0.25. Rounded up. Only if below 75%.<br>
+Max possible % = ((A + R) / N) x 100<br>
+Shortage week = first future week (9 to 16) where projected % falls below 75% if current pace continues.<br>
+</div>
+<p><b>Case 1 (B is 0 or more):</b> student can miss up to B remaining classes and still finish at or above 75%.</p>
+<p><b>Case 2 (B is below 0):</b> no bunks allowed. Must attend K consecutive classes to return to 75%.</p>
+<p><b>Shortage week example:</b> if a student at 76% keeps attending 76% of future classes, the projection simulates week 9, 10 and so on. The first week where the overall % drops below 75% is the shortage week. If it never drops, we show no shortage if pace continues.</p>
+
+<h3>Line by line: calculateBunkBudget(student) in simple language</h3>
+<p>This is the main function. A first year student can present it like this:</p>
+<div class="code-block">function calculateBunkBudget(student) {<br>&nbsp;&nbsp;// 1. add attended (A)<br>&nbsp;&nbsp;// 2. add conducted (C)<br>&nbsp;&nbsp;// 3. current % = (A / C) x 100<br>&nbsp;&nbsp;// 4. total N = 16 x 4 x 4 = 256<br>&nbsp;&nbsp;// 5. remaining R = N - C (128 now)<br>&nbsp;&nbsp;// 6. required = ceil(0.75 x 256) = 192<br>&nbsp;&nbsp;// 7. max possible = A + R<br>&nbsp;&nbsp;// 8. bunk budget = max possible - required<br>&nbsp;&nbsp;// 9. recovery K if below 75%<br>&nbsp;&nbsp;// 10. max achievable %<br>&nbsp;&nbsp;// 11. status: safe, warning, critical, detention<br>&nbsp;&nbsp;// 12. shortage week by simulation<br>&nbsp;&nbsp;// 13. urgency score for sorting<br>}</div>
+<ol class="steps">
+<li><b>Add attended:</b> loop through 4 subjects and total the attended hours. Example 29+30+30+29 = 118. This is A.</li>
+<li><b>Add conducted:</b> same loop for conducted. In week 8 it is 32+32+32+32 = 128. This is C.</li>
+<li><b>Current %:</b> divide A by C and multiply by 100. 118/128 = 92.2%. This is the past.</li>
+<li><b>Total N:</b> fixed rule. 16 weeks x 4 subjects x 4 classes = 256. Full semester size.</li>
+<li><b>Remaining R:</b> N minus C. 256-128 = 128 classes left in weeks 9 to 16.</li>
+<li><b>Required:</b> 75% of 256 = 192. You must attend at least 192 by week 16. We round up.</li>
+<li><b>Max possible:</b> if you attend 100% from now, you get A+R. Example 118+128 = 246.</li>
+<li><b>Bunk budget:</b> max possible minus required. 246-192 = 54. You can miss 54 and still pass. If negative, you are in deficit.</li>
+<li><b>Recovery:</b> if below 75%, formula (0.75xC - A)/0.25 tells how many straight classes will pull you back to 75%. We round up.</li>
+<li><b>Max achievable %:</b> (A+R)/N x 100. Best final % if perfect from now.</li>
+<li><b>Status:</b> below 65% is detention risk. Below 75% is critical. Above 75% but below 80% or budget 4 or less is warning. Else safe.</li>
+<li><b>Shortage week:</b> assume you continue at same % (e.g. 76%). Simulate each future week. Find first week where overall % drops below 75%. That is your deadline.</li>
+<li><b>Urgency score:</b> (75 - current %) x 10 + (20 - budget). Higher means more urgent. Table sorts by this so critical students appear first.</li>
+</ol>
+
+<h3>CSV format and import export</h3>
+<p>Use Import and Export buttons in the top bar. Export downloads <span class="mono">EduNexa_Report_Week8_date.csv</span> with Id, Name, RollNo, Dept, Mentor, ML_Attended, OS_Attended, DSA_Attended, Maths_Attended plus calculated totals. Import reads the same 9 first columns. Use Sample CSV button to get a template. All parsing happens in memory. No file is uploaded anywhere.</p>
+
+<h3>Users and tabs guide</h3>
+<p><b>1. Students tab:</b> table sorted by urgency. Filters by department, status and search. Detail panel shows bunk math, what if simulator, subject bars, weekly trend, shortage week and mentor contacts.</p>
+<p><b>2. Alerts tab:</b> queue of warning and critical students. Preview formal notice, copy it, simulate mentor dispatch for one or all. Audit trail logs every dispatch.</p>
+<p><b>3. Condonation tab:</b> form for 65% to 74.9% with reason, proof reference and statement. Pipeline is mentor (auto approved on filing) to HOD to exam cell. HOD must approve before exam cell can sanction.</p>
+<p><b>4. Department report tab:</b> summary cards and table per department plus risk distribution and attendance comparison charts. Print button prints the summary.</p>
+</div>
+<div class="modal-foot"><button class="btn btn-primary" onclick="closeDocsModal()">Close documentation</button></div>
+</div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script>
+/* ===== constants and sample data : all in memory, no local storage ===== */
+var SUBJECT_LIST = ['ML','OS','DSA','Maths'];
+var TOTAL_WEEKS = 16, COMPLETED_WEEKS = 8, CLASSES_PER_WEEK_PER_SUB = 4;
+var CONDUCTED_PER_SUB = 32;
+var TOTAL_SEMESTER_CLASSES = 256;
+
+var DEFAULT_STUDENTS = [
+{id:"STU-101",name:"Aarav Sharma",dept:"CSE",rollNo:"21CS001",mentor:"Dr. K. Raman (prof, CSE)",mentorEmail:"k.raman@college.edu",parentPhone:"+91 98450-11234",subjects:[
+{code:"ML",name:"Machine learning",attended:29,conducted:32,trend:[4,4,4,3,4,3,4,3]},
+{code:"OS",name:"Operating systems",attended:30,conducted:32,trend:[4,4,4,4,4,3,4,3]},
+{code:"DSA",name:"Data structures",attended:30,conducted:32,trend:[4,4,4,4,3,4,4,3]},
+{code:"Maths",name:"Discrete mathematics",attended:29,conducted:32,trend:[4,3,4,4,4,3,4,3]}]},
+{id:"STU-102",name:"Priya Nair",dept:"IT",rollNo:"21IT014",mentor:"Prof. S. Nalini (IT)",mentorEmail:"s.nalini@college.edu",parentPhone:"+91 98450-22345",subjects:[
+{code:"ML",name:"Machine learning",attended:28,conducted:32,trend:[4,4,3,4,3,4,3,3]},
+{code:"OS",name:"Operating systems",attended:29,conducted:32,trend:[4,4,4,4,3,3,4,3]},
+{code:"DSA",name:"Data structures",attended:29,conducted:32,trend:[4,4,4,3,4,4,3,3]},
+{code:"Maths",name:"Discrete mathematics",attended:28,conducted:32,trend:[3,4,4,3,4,3,4,3]}]},
+{id:"STU-103",name:"Rohit Verma",dept:"ECE",rollNo:"21EC045",mentor:"Dr. V. Rajesh (ECE)",mentorEmail:"v.rajesh@college.edu",parentPhone:"+91 98450-33456",subjects:[
+{code:"ML",name:"Machine learning",attended:27,conducted:32,trend:[4,3,4,3,4,3,3,3]},
+{code:"OS",name:"Operating systems",attended:28,conducted:32,trend:[4,4,3,4,3,3,4,3]},
+{code:"DSA",name:"Data structures",attended:27,conducted:32,trend:[3,4,3,4,3,4,3,3]},
+{code:"Maths",name:"Discrete mathematics",attended:27,conducted:32,trend:[4,3,3,4,4,3,3,3]}]},
+{id:"STU-104",name:"Rohan Gupta",dept:"CSE",rollNo:"21CS088",mentor:"Dr. K. Raman (prof, CSE)",mentorEmail:"k.raman@college.edu",parentPhone:"+91 98450-44567",subjects:[
+{code:"ML",name:"Machine learning",attended:19,conducted:32,trend:[3,2,3,2,2,3,2,2]},
+{code:"OS",name:"Operating systems",attended:20,conducted:32,trend:[3,3,2,2,3,2,3,2]},
+{code:"DSA",name:"Data structures",attended:21,conducted:32,trend:[3,3,3,2,3,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:19,conducted:32,trend:[2,3,2,3,2,2,3,2]}]},
+{id:"STU-105",name:"Sneha Patel",dept:"IT",rollNo:"21IT052",mentor:"Prof. S. Nalini (IT)",mentorEmail:"s.nalini@college.edu",parentPhone:"+91 98450-55678",subjects:[
+{code:"ML",name:"Machine learning",attended:21,conducted:32,trend:[3,3,2,3,3,2,3,2]},
+{code:"OS",name:"Operating systems",attended:22,conducted:32,trend:[3,3,3,3,2,3,3,2]},
+{code:"DSA",name:"Data structures",attended:22,conducted:32,trend:[3,3,3,2,3,3,3,2]},
+{code:"Maths",name:"Discrete mathematics",attended:22,conducted:32,trend:[3,3,2,3,3,3,3,2]}]},
+{id:"STU-106",name:"Vikram Singh",dept:"MECH",rollNo:"21ME019",mentor:"Prof. T. Baskaran (MECH)",mentorEmail:"t.baskaran@college.edu",parentPhone:"+91 98450-66789",subjects:[
+{code:"ML",name:"Machine learning",attended:23,conducted:32,trend:[3,3,3,3,3,3,3,2]},
+{code:"OS",name:"Operating systems",attended:23,conducted:32,trend:[3,3,3,3,3,3,2,3]},
+{code:"DSA",name:"Data structures",attended:23,conducted:32,trend:[4,3,3,3,3,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:22,conducted:32,trend:[3,3,3,3,2,3,3,2]}]},
+{id:"STU-107",name:"Ananya Roy",dept:"CSE",rollNo:"21CS034",mentor:"Dr. K. Raman (prof, CSE)",mentorEmail:"k.raman@college.edu",parentPhone:"+91 98450-77890",subjects:[
+{code:"ML",name:"Machine learning",attended:24,conducted:32,trend:[4,4,3,3,3,3,2,2]},
+{code:"OS",name:"Operating systems",attended:25,conducted:32,trend:[4,4,3,4,3,3,2,2]},
+{code:"DSA",name:"Data structures",attended:24,conducted:32,trend:[4,3,4,3,3,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:24,conducted:32,trend:[3,4,3,4,3,3,2,2]}]},
+{id:"STU-108",name:"Karthik Iyer",dept:"ECE",rollNo:"21EC012",mentor:"Dr. V. Rajesh (ECE)",mentorEmail:"v.rajesh@college.edu",parentPhone:"+91 98450-88901",subjects:[
+{code:"ML",name:"Machine learning",attended:25,conducted:32,trend:[4,4,3,4,3,3,2,2]},
+{code:"OS",name:"Operating systems",attended:24,conducted:32,trend:[4,3,4,3,3,3,2,2]},
+{code:"DSA",name:"Data structures",attended:25,conducted:32,trend:[4,4,3,3,4,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:24,conducted:32,trend:[3,4,3,4,3,3,2,2]}]},
+{id:"STU-109",name:"Divya Menon",dept:"MECH",rollNo:"21ME064",mentor:"Prof. T. Baskaran (MECH)",mentorEmail:"t.baskaran@college.edu",parentPhone:"+91 98450-99012",subjects:[
+{code:"ML",name:"Machine learning",attended:25,conducted:32,trend:[4,4,4,3,3,3,2,2]},
+{code:"OS",name:"Operating systems",attended:25,conducted:32,trend:[4,4,3,4,3,3,2,2]},
+{code:"DSA",name:"Data structures",attended:25,conducted:32,trend:[4,3,4,4,3,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:25,conducted:32,trend:[4,4,3,3,4,3,2,2]}]},
+{id:"STU-110",name:"Tanmay Bhat",dept:"IT",rollNo:"21IT031",mentor:"Prof. S. Nalini (IT)",mentorEmail:"s.nalini@college.edu",parentPhone:"+91 98450-00123",subjects:[
+{code:"ML",name:"Machine learning",attended:24,conducted:32,trend:[4,4,3,3,3,3,2,2]},
+{code:"OS",name:"Operating systems",attended:24,conducted:32,trend:[4,3,4,3,3,3,2,2]},
+{code:"DSA",name:"Data structures",attended:24,conducted:32,trend:[3,4,4,3,3,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:24,conducted:32,trend:[4,3,3,4,3,3,2,2]}]},
+{id:"STU-111",name:"Meera Joshi",dept:"ECE",rollNo:"21EC078",mentor:"Dr. V. Rajesh (ECE)",mentorEmail:"v.rajesh@college.edu",parentPhone:"+91 98450-11122",subjects:[
+{code:"ML",name:"Machine learning",attended:26,conducted:32,trend:[4,4,4,3,4,3,2,2]},
+{code:"OS",name:"Operating systems",attended:25,conducted:32,trend:[4,4,3,4,3,3,2,2]},
+{code:"DSA",name:"Data structures",attended:25,conducted:32,trend:[4,3,4,3,4,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:25,conducted:32,trend:[4,4,3,4,3,3,2,2]}]},
+{id:"STU-112",name:"Arjun Das",dept:"MECH",rollNo:"21ME040",mentor:"Prof. T. Baskaran (MECH)",mentorEmail:"t.baskaran@college.edu",parentPhone:"+91 98450-22233",subjects:[
+{code:"ML",name:"Machine learning",attended:25,conducted:32,trend:[4,4,3,4,3,3,2,2]},
+{code:"OS",name:"Operating systems",attended:24,conducted:32,trend:[4,3,4,3,3,3,2,2]},
+{code:"DSA",name:"Data structures",attended:24,conducted:32,trend:[3,4,4,3,3,3,2,2]},
+{code:"Maths",name:"Discrete mathematics",attended:25,conducted:32,trend:[4,4,3,3,4,3,2,2]}]}
+];
+
+var DEFAULT_CONDON = [
+{id:"COND-2024-01",studentId:"STU-105",studentName:"Sneha Patel",rollNo:"21IT052",dept:"IT",currentPct:68.0,reason:"Medical illness and hospitalisation",docRef:"MED-HOSP-BLR-9042",remarks:"Acute viral fever with medical certificate attached. Committed to attend 100% of remaining 128 classes.",feePaid:true,steps:{mentor:{status:"APPROVED",date:"2024-10-18",officer:"Prof. S. Nalini (IT)"},hod:{status:"PENDING",date:null,officer:"HOD, IT"},examCell:{status:"PENDING",date:null,officer:"Dean academic affairs"}}},
+{id:"COND-2024-02",studentId:"STU-106",studentName:"Vikram Singh",rollNo:"21ME019",dept:"MECH",currentPct:71.1,reason:"University sports and NCC camp",docRef:"SPORTS-UNIV-BASKETBALL-11",remarks:"Represented university at all India inter university basketball tournament.",feePaid:true,steps:{mentor:{status:"APPROVED",date:"2024-10-16",officer:"Prof. T. Baskaran (MECH)"},hod:{status:"APPROVED",date:"2024-10-17",officer:"HOD, MECH"},examCell:{status:"PENDING",date:null,officer:"Dean academic affairs"}}}
+];
+
+var studentsData = JSON.parse(JSON.stringify(DEFAULT_STUDENTS));
+var condonationApplications = JSON.parse(JSON.stringify(DEFAULT_CONDON));
+var selectedStudentId = "STU-104";
+var selectedAlertStudentId = "STU-104";
+var activeTab = "students";
+var alertDispatchLogs = [];
+
+/* ===== core engine : plain language, first year friendly ===== */
+function calculateBunkBudget(student){
+  // 1. sum attended (A)
+  var totalAttended = 0, totalConducted = 0, i;
+  for(i=0;i<student.subjects.length;i++){ totalAttended += student.subjects[i].attended; totalConducted += student.subjects[i].conducted; }
+  // 2. current % = (A / C) x 100
+  var currentPct = totalConducted > 0 ? (totalAttended / totalConducted) * 100 : 0;
+  // 3. total semester N = 16 x 4 x 4 = 256
+  var totalSemesterClasses = TOTAL_SEMESTER_CLASSES;
+  // 4. remaining R = N - C
+  var remainingClasses = totalSemesterClasses - totalConducted;
+  if(remainingClasses < 0) remainingClasses = 0;
+  // 5. required final = ceil(0.75 x 256) = 192
+  var requiredFinalAttended = Math.ceil(0.75 * totalSemesterClasses);
+  // 6. max possible if 100% henceforth = A + R
+  var maxPossibleAttended = totalAttended + remainingClasses;
+  // 7. bunk budget = max possible - required
+  var bunkBudget = maxPossibleAttended - requiredFinalAttended;
+  // 8. recovery K if below 75%
+  var recoveryRequired = 0;
+  if(currentPct < 75){
+    recoveryRequired = Math.ceil((0.75 * totalConducted - totalAttended) / 0.25);
+    if(recoveryRequired < 0) recoveryRequired = 0;
+  }
+  // 9. max achievable %
+  var maxAchievablePct = (maxPossibleAttended / totalSemesterClasses) * 100;
+  // 10. status
+  var status = "SAFE", statusLabel = "Safe";
+  if(currentPct < 65){ status = "DETENTION"; statusLabel = "Detention risk"; }
+  else if(currentPct < 75){ status = "CRITICAL"; statusLabel = "Critical"; }
+  else if(bunkBudget <= 4 || currentPct < 80){ status = "WARNING"; statusLabel = "Warning"; }
+  // 11. shortage week : simulate future at same pace
+  var shortageWeek = null, shortageLabel = "No shortage if pace continues";
+  if(currentPct < 75){ shortageWeek = 8; shortageLabel = "Already in shortage (week 8)"; }
+  else{
+    var rate = currentPct / 100, perWeekTotal = 16, w;
+    for(w=9; w<=16; w++){
+      var projAtt = totalAttended + rate * perWeekTotal * (w - 8);
+      var projCond = perWeekTotal * w;
+      var projPct = (projAtt / projCond) * 100;
+      if(projPct < 75){ shortageWeek = w; shortageLabel = "Shortage by week " + w + " at current pace"; break; }
+    }
+  }
+  // 12. urgency for sorting
+  var urgencyScore = (75 - currentPct) * 10 + (20 - bunkBudget);
+  return {totalAttended:totalAttended,totalConducted:totalConducted,remainingClasses:remainingClasses,currentPct:Number(currentPct.toFixed(1)),bunkBudget:bunkBudget,recoveryRequired:recoveryRequired,maxAchievablePct:Number(maxAchievablePct.toFixed(1)),requiredFinalAttended:requiredFinalAttended,maxPossibleAttended:maxPossibleAttended,status:status,statusLabel:statusLabel,shortageWeek:shortageWeek,shortageLabel:shortageLabel,urgencyScore:urgencyScore};
+}
+
+function deptColor(d){ if(d==='CSE') return '#3D5C6D'; if(d==='IT') return '#65909D'; if(d==='ECE') return '#766993'; return '#7a6fb0'; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showToast(msg,type){
+  type = type || 'ok';
+  var wrap = document.getElementById('toast-wrap');
+  var el = document.createElement('div');
+  el.className = 'toast ' + (type==='success'?'ok':type==='info'?'':type==='warn'?'warn':type==='error'?'err':'');
+  var title = type==='error' ? 'Action needed' : type==='warn' ? 'Please note' : 'Done';
+  el.innerHTML = '<div style="flex:1"><b>'+esc(title)+'</b><div style="font-size:12px">'+esc(msg)+'</div><small>Edunexa. '+new Date().toLocaleTimeString()+'</small></div>';
+  wrap.appendChild(el);
+  setTimeout(function(){ el.style.opacity='0'; setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },400); },3600);
+}
+
+var TAB_META = {
+students:['Students ledger','Ranked by risk and bunk vulnerability.'],
+alerts:['Early warnings','Automated mentor dispatch with recovery mathematics.'],
+condonation:['Condonation portal','65% to 74.9% eligibility. 3 tier approval pipeline.'],
+reports:['Department reports','Cohort analytics across CSE, IT, ECE and MECH.']
+};
+function switchTab(tab){
+  activeTab = tab;
+  var tabs = ['students','alerts','condonation','reports'];
+  for(var i=0;i<tabs.length;i++){
+    var t = tabs[i];
+    var btn = document.getElementById('nav-btn-'+t);
+    var content = document.getElementById('tab-content-'+t);
+    if(t===tab){ btn.classList.add('active'); content.classList.remove('hidden'); }
+    else{ btn.classList.remove('active'); content.classList.add('hidden'); }
+  }
+  document.getElementById('page-title').textContent = TAB_META[tab][0];
+  document.getElementById('page-subtitle').textContent = TAB_META[tab][1] + ' ' + studentsData.length + ' students monitored.';
+  if(tab==='reports'){ renderDeptReports(); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateRoleView(){
+  var r = document.getElementById('role-select').value;
+  var m = {all:'Superview: all authorities and actions visible.',student:'Student view: personal budget and simulator prioritised.',mentor:'Mentor view: counselling queue and dispatch highlighted.',hod:'HOD view: department approvals prioritised.',exam_cell:'Exam cell view: hall ticket sanction controls highlighted.'};
+  showToast(m[r]||'Role updated.','info');
+}
+function updateKPISummaries(){
+  var ta=0,tc=0,safe=0,warn=0,crit=0,i;
+  for(i=0;i<studentsData.length;i++){ var s=calculateBunkBudget(studentsData[i]); ta+=s.totalAttended; tc+=s.totalConducted; if(s.status==='SAFE') safe++; else if(s.status==='WARNING') warn++; else crit++; }
+  var avg = tc>0 ? ((ta/tc)*100).toFixed(1) : '0.0';
+  document.getElementById('stat-cohort-avg').textContent = avg + '%';
+  document.getElementById('stat-safe-count').textContent = safe;
+  document.getElementById('stat-warn-count').textContent = warn;
+  document.getElementById('stat-critical-count').textContent = crit;
+  document.getElementById('badge-total-students').textContent = studentsData.length;
+  document.getElementById('badge-alert-count').textContent = warn+crit;
+  document.getElementById('dispatch-risk-count').textContent = warn+crit;
+  var elig=0;
+  for(i=0;i<studentsData.length;i++){ var st=calculateBunkBudget(studentsData[i]); if(st.currentPct>=65 && st.currentPct<75) elig++; }
+  document.getElementById('badge-condon-count').textContent = elig;
+  document.getElementById('page-subtitle').textContent = TAB_META[activeTab][1] + ' ' + studentsData.length + ' students monitored.';
+}
+
+/* ===== students tab ===== */
+function getFilteredAndSortedStudents(){
+  var search = (document.getElementById('search-input').value||'').toLowerCase().trim();
+  var dept = document.getElementById('filter-dept').value;
+  var status = document.getElementById('filter-status').value;
+  var sort = document.getElementById('sort-by').value;
+  var out = [];
+  for(var i=0;i<studentsData.length;i++){
+    var s = studentsData[i];
+    var stats = calculateBunkBudget(s);
+    var copy = {id:s.id,name:s.name,dept:s.dept,rollNo:s.rollNo,mentor:s.mentor,mentorEmail:s.mentorEmail,parentPhone:s.parentPhone,subjects:s.subjects,stats:stats};
+    var ms = s.name.toLowerCase().indexOf(search)>=0 || s.rollNo.toLowerCase().indexOf(search)>=0 || s.mentor.toLowerCase().indexOf(search)>=0 || s.dept.toLowerCase().indexOf(search)>=0;
+    var md = (dept==='ALL' || s.dept===dept);
+    var mst = true;
+    if(status==='SAFE') mst = (stats.status==='SAFE');
+    else if(status==='WARNING') mst = (stats.status==='WARNING');
+    else if(status==='CRITICAL') mst = (stats.status==='CRITICAL' || stats.status==='DETENTION');
+    else if(status==='DETENTION') mst = (stats.status==='DETENTION');
+    if(ms && md && mst) out.push(copy);
+  }
+  out.sort(function(a,b){
+    if(sort==='urgency') return b.stats.urgencyScore - a.stats.urgencyScore;
+    if(sort==='pct_asc') return a.stats.currentPct - b.stats.currentPct;
+    if(sort==='pct_desc') return b.stats.currentPct - a.stats.currentPct;
+    if(sort==='budget_asc') return a.stats.bunkBudget - b.stats.bunkBudget;
+    if(sort==='name_asc') return a.name.localeCompare(b.name);
+    return 0;
+  });
+  return out;
+}
+function renderStudentsTable(){
+  var tbody = document.getElementById('student-table-body');
+  var filtered = getFilteredAndSortedStudents();
+  document.getElementById('filtered-count-tag').textContent = 'Showing ' + filtered.length + ' of ' + studentsData.length;
+  if(!filtered.length){ tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:26px;color:#7a8f9a">No students match the selected filters.</td></tr>'; return; }
+  var html = '';
+  for(var i=0;i<filtered.length;i++){
+    var s = filtered[i], st = s.stats, sel = (s.id===selectedStudentId);
+    var budget = '';
+    if(st.bunkBudget>0) budget = '<span class="budget-pill budget-pos">+'+st.bunkBudget+' classes</span>';
+    else if(st.bunkBudget===0) budget = '<span class="budget-pill budget-zero">0 margin</span>';
+    else budget = '<span class="budget-pill budget-neg">'+st.bunkBudget+' deficit</span>';
+    var rec = st.recoveryRequired>0 ? '<span class="rec-need">Attend '+st.recoveryRequired+'</span>' : '<span class="rec-ok">0 needed</span>';
+    var badge = '';
+    if(st.status==='SAFE') badge = '<span class="status-pill st-safe">Safe</span>';
+    else if(st.status==='WARNING') badge = '<span class="status-pill st-warn">Warning</span>';
+    else if(st.status==='DETENTION') badge = '<span class="status-pill st-det">Detention</span>';
+    else badge = '<span class="status-pill st-crit">Critical</span>';
+    var pctC = '#2f7a6b'; if(st.currentPct<75) pctC='#b42318'; else if(st.currentPct<80) pctC='#766993';
+    html += '<tr onclick="selectStudent(\''+s.id+'\')" class="'+(sel?'selected':'')+'">'
+    + '<td><div class="stu-name">'+esc(s.name)+'</div><div class="stu-meta"><span class="dept-pill" style="background:'+deptColor(s.dept)+'">'+esc(s.dept)+'</span><span class="mono">'+esc(s.rollNo)+'</span></div></td>'
+    + '<td><div class="pct-big mono" style="color:'+pctC+'">'+st.currentPct+'%</div><div class="pct-small mono">'+st.totalAttended+'/'+st.totalConducted+'</div></td>'
+    + '<td style="text-align:center">'+budget+'</td>'
+    + '<td style="text-align:center">'+rec+'</td>'
+    + '<td style="text-align:center">'+badge+'</td>'
+    + '<td style="text-align:right"><button onclick="event.stopPropagation();selectStudent(\''+s.id+'\')" class="mini-btn '+(sel?'active':'')+'">Inspect</button></td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+function filterStudents(){ renderStudentsTable(); }
+function selectStudent(id){ selectedStudentId = id; renderStudentsTable(); renderStudentDetail(id); }
+function studentTrendSVG(student){
+  var wt=[0,0,0,0,0,0,0,0], i,j;
+  for(i=0;i<student.subjects.length;i++){ for(j=0;j<8;j++){ wt[j]+=student.subjects[i].trend[j]; } }
+  var W=340,H=122,padL=30,padB=20,padT=10;
+  var barW = (W-padL-12)/8 - 8;
+  var svg = '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:122px;background:#f8fbfc;border:1px solid #d4e3e7;border-radius:8px" role="img">';
+  var marks=[4,8,12,16];
+  for(i=0;i<marks.length;i++){
+    var v=marks[i];
+    var y = padT + (H-padT-padB)*(1 - v/16);
+    svg += '<line x1="'+padL+'" y1="'+y+'" x2="'+W+'" y2="'+y+'" stroke="#d4e3e7" stroke-width="1"/>';
+    svg += '<text x="4" y="'+(y+4)+'" font-size="9" fill="#65909D">'+Math.round(v/16*100)+'%</text>';
+  }
+  var y75 = padT + (H-padT-padB)*(1-12/16);
+  svg += '<line x1="'+padL+'" y1="'+y75+'" x2="'+W+'" y2="'+y75+'" stroke="#766993" stroke-width="1" stroke-dasharray="4 3"/>';
+  for(i=0;i<8;i++){
+    var h = (H-padT-padB)*(wt[i]/16);
+    var x = padL+6 + i*(barW+8);
+    var yb = H-padB - h;
+    var pct = wt[i]/16*100;
+    var col = pct<75 ? '#b42318' : pct<80 ? '#766993' : '#3D5C6D';
+    svg += '<rect x="'+x.toFixed(1)+'" y="'+yb.toFixed(1)+'" width="'+barW+'" height="'+Math.max(h,2).toFixed(1)+'" rx="3" fill="'+col+'"><title>Week '+(i+1)+': '+wt[i]+'/16</title></rect>';
+    svg += '<text x="'+(x+barW/2).toFixed(1)+'" y="'+(H-6)+'" font-size="9" text-anchor="middle" fill="#637a86">W'+(i+1)+'</text>';
+  }
+  svg += '</svg>';
+  return svg;
+}
+function renderStudentDetail(id){
+  var student=null,i;
+  for(i=0;i<studentsData.length;i++){ if(studentsData[i].id===id) student=studentsData[i]; }
+  var box=document.getElementById('detail-card');
+  if(!student){ box.innerHTML='<div style="padding:28px;text-align:center;color:#7a8f9a">Select a student.</div>'; return; }
+  var st=calculateBunkBudget(student);
+  var hero='';
+  if(st.bunkBudget>0) hero='<div class="hero safe"><span class="hero-tag">Safe margin</span><div class="hero-title">+'+st.bunkBudget+' classes<br><span style="font-size:13px;font-weight:700">Bunk budget available</span></div><div class="hero-sub">Skip up to '+st.bunkBudget+' more and stay above 75%.</div></div>';
+  else if(st.bunkBudget===0) hero='<div class="hero zero"><span class="hero-tag">Zero margin</span><div class="hero-title">0 classes<br><span style="font-size:13px;font-weight:700">Borderline 75.0%</span></div><div class="hero-sub">One absence moves to detention territory.</div></div>';
+  else hero='<div class="hero neg"><span class="hero-tag">Critical deficit</span><div class="hero-title">'+st.bunkBudget+' classes<br><span style="font-size:13px;font-weight:700">Attend '+st.recoveryRequired+' straight</span></div><div class="hero-sub">Max possible: '+st.maxAchievablePct+'% if 100% henceforth.</div></div>';
+  var rows='';
+  for(i=0;i<student.subjects.length;i++){
+    var sub=student.subjects[i];
+    var pct=(sub.attended/sub.conducted)*100, pctF=pct.toFixed(1);
+    var budget=(sub.attended+32)-Math.ceil(0.75*64);
+    var bad=pct<75, warn=!bad && pct<80;
+    var fillC = bad ? '#b42318' : warn ? '#766993' : '#3D5C6D';
+    rows+='<div class="subj '+(bad?'bad':'')+'"><div class="subj-head"><span>'+esc(sub.code)+' <span style="font-weight:600;color:#637a86">. '+esc(sub.name)+'</span></span><span class="mono" style="color:'+fillC+'">'+pctF+'%</span></div><div class="bar"><div class="bar-fill" style="width:'+Math.min(pct,100).toFixed(1)+'%;background:'+fillC+'"></div></div><div class="subj-foot"><span>'+sub.attended+'/'+sub.conducted+' hours</span><span class="mono" style="font-weight:800;color:'+fillC+'">'+(budget>=0?'+'+budget+' budget':budget+' deficit')+'</span></div></div>';
+  }
+  var pctBigC = st.currentPct<75 ? '#b42318' : '#1f2f38';
+  box.innerHTML =
+  '<div class="detail-head"><div class="detail-id"><div class="avatar" style="background:'+deptColor(student.dept)+'">'+esc(student.name.charAt(0))+'</div><div><div class="detail-name">'+esc(student.name)+' <span class="dept-pill" style="background:'+deptColor(student.dept)+'">'+esc(student.dept)+'</span></div><div class="detail-sub mono">'+esc(student.rollNo)+' . '+esc(student.mentor.split('(')[0])+'</div></div></div><div class="detail-pct"><div class="detail-pct-big mono" style="color:'+pctBigC+'">'+st.currentPct+'%</div><div class="detail-pct-lab">Attendance</div></div></div>'
+  + hero
+  + '<div class="sim-box"><div class="sim-head"><span class="sim-title">What if simulator</span><span id="simulator-miss-label" class="sim-label mono">Miss 0 more</span></div><input type="range" id="simulator-slider" min="0" max="64" value="0" oninput="updateSimulator(this.value,\''+student.id+'\')"><div class="sim-grid"><div class="sim-cell"><div class="sim-cap">Projected final %</div><div id="sim-projected-pct" class="sim-val mono">'+st.maxAchievablePct+'%</div></div><div class="sim-cell"><div class="sim-cap">Revised budget</div><div id="sim-projected-budget" class="sim-val mono">'+st.bunkBudget+' left</div></div></div></div>'
+  + '<div class="short-box"><div class="short-title">Shortage week and limits</div><div class="short-grid"><div class="short-cell"><b>Shortage week</b><br>'+esc(st.shortageLabel)+'</div><div class="short-cell"><b>Max achievable</b><br><span class="mono">'+st.maxAchievablePct+'% ('+st.maxPossibleAttended+'/256)</span></div><div class="short-cell"><b>Required by week 16</b><br><span class="mono">192 of 256 (75%)</span></div><div class="short-cell"><b>Remaining</b><br><span class="mono">'+st.remainingClasses+' classes in weeks 9 to 16</span></div></div></div>'
+  + '<div style="margin-top:12px"><div class="short-title">Subject breakdown</div><div class="subj-list">'+rows+'</div></div>'
+  + '<div style="margin-top:12px"><div class="short-title">Weekly trend (week 1 to 8)</div>'+studentTrendSVG(student)+'<div class="trend-caption">Weekly attendance out of 16 classes. Dashed line is 75%.</div>'
+  + '<div class="contact-grid"><div class="contact-cell"><b>Mentor</b>'+esc(student.mentor)+'</div><div class="contact-cell"><b>Parent contact</b><span class="mono">'+esc(student.parentPhone)+'</span></div></div></div>'
+  + '<div class="calc-box"><b>How this is calculated:</b><br>A = '+st.totalAttended+', C = '+st.totalConducted+', R = '+st.remainingClasses+', N = 256.<br>Current = (A/C)x100 = '+st.currentPct+'%. Budget = (A+R)-192 = '+st.bunkBudget+'. '+(st.recoveryRequired>0?'Recovery = ceil((0.75xC-A)/0.25) = '+st.recoveryRequired+'.':'Recovery = 0. Max = ((A+R)/N)x100 = '+st.maxAchievablePct+'%.')+'</div>';
+}
+function updateSimulator(missed,id){
+  var s=null,i;
+  for(i=0;i<studentsData.length;i++){ if(studentsData[i].id===id) s=studentsData[i]; }
+  if(!s) return;
+  var m=parseInt(missed,10)||0;
+  document.getElementById('simulator-miss-label').textContent='Miss '+m+' more';
+  var st=calculateBunkBudget(s);
+  var simA=Math.max(0,st.totalAttended+(st.remainingClasses-m));
+  var simP=((simA/TOTAL_SEMESTER_CLASSES)*100).toFixed(1);
+  var simB=st.bunkBudget-m;
+  var p=document.getElementById('sim-projected-pct');
+  p.textContent=simP+'%'; p.style.color = parseFloat(simP)<75 ? '#b42318' : '#2f7a6b';
+  var b=document.getElementById('sim-projected-budget');
+  b.textContent=simB+' left'; b.style.color = simB<0 ? '#b42318' : '#2f7a6b';
+}
+
+/* ===== alerts tab ===== */
+function renderAlertsQueue(){
+  var el=document.getElementById('alerts-queue-list');
+  var risk=[];
+  for(var i=0;i<studentsData.length;i++){ var s=studentsData[i]; var stats=calculateBunkBudget(s); if(stats.status==='WARNING'||stats.status==='CRITICAL'||stats.status==='DETENTION'){ risk.push({s:s,stats:stats}); } }
+  risk.sort(function(a,b){ return b.stats.urgencyScore - a.stats.urgencyScore; });
+  if(!risk.length){ el.innerHTML='<div style="padding:22px;text-align:center;color:#7a8f9a;font-size:12px">All students in safe zone.</div>'; renderAlertPreview(null); return; }
+  var html='';
+  for(i=0;i<risk.length;i++){
+    var s=risk[i].s, st=risk[i].stats, sel=(s.id===selectedAlertStudentId);
+    var col = st.currentPct<75 ? '#b42318' : '#766993';
+    var bud = st.bunkBudget<0 ? st.bunkBudget+' deficit' : st.bunkBudget+' left';
+    html+='<div onclick="selectAlertStudent(\''+s.id+'\')" class="queue-item '+(sel?'sel':'')+'"><div class="queue-item-top"><span>'+esc(s.name)+'</span><span class="mono" style="color:'+col+'">'+st.currentPct+'%</span></div><div class="queue-item-sub"><span class="mono">'+esc(s.rollNo)+' ('+esc(s.dept)+')</span><span class="mono">'+bud+'</span></div></div>';
+  }
+  el.innerHTML=html;
+  var found=false;
+  for(i=0;i<risk.length;i++){ if(risk[i].s.id===selectedAlertStudentId) found=true; }
+  if(!found) selectedAlertStudentId=risk[0].s.id;
+  renderAlertPreview(selectedAlertStudentId);
+}
+function selectAlertStudent(id){ selectedAlertStudentId=id; renderAlertsQueue(); }
+function renderAlertPreview(id){
+  var prev=document.getElementById('alert-preview-body'), stamp=document.getElementById('alert-preview-stamp');
+  var st0=null,i;
+  for(i=0;i<studentsData.length;i++){ if(studentsData[i].id===id) st0=studentsData[i]; }
+  if(!st0){ prev.textContent='Select a student from the queue.'; stamp.textContent='No record'; return; }
+  var st=calculateBunkBudget(st0);
+  stamp.textContent='Ref: Edunexa alert '+st0.dept+' '+st0.rollNo+' week 8';
+  var math='';
+  if(st.bunkBudget<0){
+    math='[Deficit] Bunk budget exhausted.\n- Deficit: '+Math.abs(st.bunkBudget)+' classes below buffer.\n- Action: attend next '+st.recoveryRequired+' consecutive classes with zero absence.\n- Max achievable (100% henceforth): '+st.maxAchievablePct+'%.\n- '+st.shortageLabel+'.';
+  }else{
+    math='[Low margin] Remaining budget: exactly '+st.bunkBudget+' class(es).\n- Missing more than '+st.bunkBudget+' in weeks 9 to 16 drops below 75%.\n- Student barred from semester end exams if threshold breached.\n- '+st.shortageLabel+'.';
+  }
+  prev.textContent =
+'Official mid term attendance warning and recovery directive\n'
++'Issued by: office of dean and exam cell. Edunexa attendance intelligence\n'
++'--------------------------------------------------------------------------------\n'
++'Date: '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' | Ay 2024-25 (sem 1. Week 8 of 16)\n'
++'To mentor: '+st0.mentor+' ('+st0.mentorEmail+')\n'
++'To student: '+st0.name+' (roll '+st0.rollNo+', '+st0.dept+')\n'
++'Parent: '+st0.parentPhone+'\n'
++'--------------------------------------------------------------------------------\n'
++'1. Current audit (weeks 1 to 8)\n'
++'- Conducted: '+st.totalConducted+' hours (32 per subject). Attended: '+st.totalAttended+' hours.\n'
++'- Current: '+st.currentPct+'%. Required: 75.0%. Status: '+st.statusLabel+'.\n'
++'--------------------------------------------------------------------------------\n'
++'2. Bunk budget mathematics\n'+math+'\n'
++'--------------------------------------------------------------------------------\n'
++'3. Next steps\n'
++'1. Mentor ('+st0.mentor+') to counsel in person by Friday.\n'
++'2. If 65% to 74.9% with valid proof, file condonation dossier immediately.\n'
++'3. Copy archived in dean audit portal.\n'
++'-- Generated by Edunexa attendance intelligence platform --';
+}
+function sendSingleAlert(){
+  var s=null,i;
+  for(i=0;i<studentsData.length;i++){ if(studentsData[i].id===selectedAlertStudentId) s=studentsData[i]; }
+  if(!s) return;
+  var st=calculateBunkBudget(s), t=new Date().toLocaleTimeString();
+  alertDispatchLogs.unshift('['+t+'] Dispatched. '+s.name+' ('+s.rollNo+') | Mentor: '+s.mentor+' | '+st.currentPct+'% | Budget '+st.bunkBudget);
+  updateDispatchAuditLog(); showToast('Notice dispatched to '+s.name+' mentor and parent.','success');
+}
+function dispatchAllAlerts(){
+  var r=[];
+  for(var i=0;i<studentsData.length;i++){ var st=calculateBunkBudget(studentsData[i]); if(st.status==='WARNING'||st.status==='CRITICAL'||st.status==='DETENTION') r.push(studentsData[i]); }
+  if(!r.length){ showToast('No students require warnings right now.','info'); return; }
+  var t=new Date().toLocaleTimeString();
+  for(i=0;i<r.length;i++){ var st2=calculateBunkBudget(r[i]); alertDispatchLogs.unshift('['+t+'] Batch. '+r[i].name+' ('+r[i].rollNo+') | '+r[i].mentor+' | '+st2.currentPct+'%'); }
+  updateDispatchAuditLog(); showToast('Dispatched '+r.length+' early warning notices.','success');
+}
+function copyAlertText(){
+  var txt=document.getElementById('alert-preview-body').textContent;
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){ showToast('Alert notice copied to clipboard.','info'); }); }
+  else{ var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); showToast('Alert notice copied to clipboard.','info');}catch(e){} document.body.removeChild(ta); }
+}
+function updateDispatchAuditLog(){
+  var el=document.getElementById('dispatch-log');
+  if(!alertDispatchLogs.length){ el.innerHTML='<div>[System] No dispatches yet this session.</div>'; return; }
+  var html='';
+  for(var i=0;i<alertDispatchLogs.length;i++){ html+='<div>'+esc(alertDispatchLogs[i])+'</div>'; }
+  el.innerHTML=html;
+}
+
+/* ===== condonation ===== */
+function renderCondonationTab(){
+  var sel=document.getElementById('condon-student-select');
+  var elig=[];
+  for(var i=0;i<studentsData.length;i++){ var st=calculateBunkBudget(studentsData[i]); if(st.currentPct>=65 && st.currentPct<75) elig.push({s:studentsData[i],st:st}); }
+  if(elig.length){
+    var html='';
+    for(i=0;i<elig.length;i++){ html+='<option value="'+elig[i].s.id+'">'+esc(elig[i].s.name)+' ('+esc(elig[i].s.rollNo)+' . '+esc(elig[i].s.dept)+') . '+elig[i].st.currentPct+'%</option>'; }
+    sel.innerHTML=html;
+  }else{ sel.innerHTML='<option value="">No eligible candidates (65% to 74.9%)</option>'; }
+  updateCondonationFormPreview(); renderCondonationDossiers();
+}
+function updateCondonationFormPreview(){
+  var id=document.getElementById('condon-student-select').value;
+  var s=null,i;
+  for(i=0;i<studentsData.length;i++){ if(studentsData[i].id===id) s=studentsData[i]; }
+  if(!s){ document.getElementById('condon-meta-pct').textContent='--'; document.getElementById('condon-meta-deficit').textContent='--'; return; }
+  var st=calculateBunkBudget(s);
+  document.getElementById('condon-meta-pct').textContent=st.currentPct+'%';
+  document.getElementById('condon-meta-deficit').textContent=Math.abs(st.bunkBudget)+' classes ('+(75-st.currentPct).toFixed(1)+'% gap)';
+}
+function handleCondonationSubmit(e){
+  e.preventDefault();
+  var id=document.getElementById('condon-student-select').value;
+  var s=null,i;
+  for(i=0;i<studentsData.length;i++){ if(studentsData[i].id===id) s=studentsData[i]; }
+  if(!s){ showToast('Select an eligible candidate first.','error'); return; }
+  var st=calculateBunkBudget(s);
+  var today=new Date().toISOString().split('T')[0];
+  condonationApplications.unshift({id:'COND-2024-0'+(condonationApplications.length+1),studentId:s.id,studentName:s.name,rollNo:s.rollNo,dept:s.dept,currentPct:st.currentPct,reason:document.getElementById('condon-reason').value,docRef:document.getElementById('condon-docs').value,remarks:document.getElementById('condon-remarks').value,feePaid:true,steps:{mentor:{status:"APPROVED",date:today,officer:s.mentor},hod:{status:"PENDING",date:null,officer:'HOD, '+s.dept},examCell:{status:"PENDING",date:null,officer:"Dean academic affairs"}}});
+  document.getElementById('condonation-form').reset();
+  renderCondonationDossiers(); updateKPISummaries(); renderCondonationTab();
+  showToast('Condonation dossier filed for '+s.name+'.','success');
+}
+function renderCondonationDossiers(){
+  var c=document.getElementById('condonation-dossier-list');
+  document.getElementById('condon-pipeline-count').textContent=condonationApplications.length+' in pipeline';
+  if(!condonationApplications.length){ c.innerHTML='<div style="padding:30px;text-align:center;color:#7a8f9a">No active applications.</div>'; return; }
+  var html='';
+  for(var idx=0;idx<condonationApplications.length;idx++){
+    var app=condonationApplications[idx];
+    var s1=app.steps.mentor, s2=app.steps.hod, s3=app.steps.examCell;
+    function card(title,st,extra){
+      var cls = st==='APPROVED' ? 'ok' : st==='REJECTED' ? 'no' : '';
+      var col = st==='APPROVED' ? '#2f7a6b' : st==='REJECTED' ? '#b42318' : '#766993';
+      var lab = st.charAt(0)+st.slice(1).toLowerCase();
+      return '<div class="step '+cls+'"><div class="step-head"><span>'+title+'</span><span style="color:'+col+'">'+lab+'</span></div>'+extra+'</div>';
+    }
+    var e1='<div style="color:#637a86">'+esc(s1.officer)+'</div>';
+    var e2 = s2.status==='PENDING'
+      ? '<div class="step-actions"><button class="btn-approve" onclick="approveCondonStep('+idx+',\'hod\',true)">Approve</button><button class="btn-reject" onclick="approveCondonStep('+idx+',\'hod\',false)">Reject</button></div>'
+      : '<div style="color:#637a86">'+esc(s2.officer)+' ('+esc(s2.date||'')+')</div>';
+    var e3;
+    if(s2.status==='APPROVED' && s3.status==='PENDING'){
+      e3='<div class="step-actions"><button class="btn-sanction" onclick="approveCondonStep('+idx+',\'examCell\',true)">Sanction</button><button class="btn-reject" onclick="approveCondonStep('+idx+',\'examCell\',false)">Reject</button></div>';
+    }else{
+      var t3 = s3.status==='APPROVED' ? 'Hall ticket released' : (s2.status==='PENDING' ? 'Awaiting HOD' : s3.status.charAt(0)+s3.status.slice(1).toLowerCase());
+      e3='<div style="color:#637a86">'+esc(t3)+'</div>';
+    }
+    html+='<div class="dossier"><div class="dossier-head"><div><span class="dossier-name">'+esc(app.studentName)+'</span><span class="dossier-id mono">'+esc(app.id)+'</span><div class="dossier-sub mono">'+esc(app.rollNo)+' ('+esc(app.dept)+')</div><div class="dossier-sub"><b>Reason:</b> '+esc(app.reason)+' . <b>Doc:</b> '+esc(app.docRef)+'</div></div><div class="dossier-pct">'+app.currentPct+'%<div class="dossier-fee">Rs. 1500 fee paid</div></div></div><div class="steps">'+card('1. Mentor',s1.status,e1)+card('2. HOD',s2.status,e2)+card('3. Exam cell',s3.status,e3)+'</div><div class="dossier-note">&quot;'+esc(app.remarks)+'&quot;</div></div>';
+  }
+  c.innerHTML=html;
+}
+function approveCondonStep(idx,step,ok){
+  var app=condonationApplications[idx], today=new Date().toISOString().split('T')[0];
+  if(step==='hod'){ app.steps.hod.status=ok?'APPROVED':'REJECTED'; app.steps.hod.date=today; }
+  else{ app.steps.examCell.status=ok?'APPROVED':'REJECTED'; app.steps.examCell.date=today; }
+  renderCondonationDossiers();
+  showToast(ok?'Step approved. Pipeline advanced.':'Step rejected.', ok?'success':'error');
+}
+
+/* ===== reports ===== */
+function getDepartmentAggregates(){
+  var depts=['CSE','IT','ECE','MECH'], out=[], d,i;
+  for(d=0;d<depts.length;d++){
+    var dept=depts[d], ta=0,tc=0,safe=0,warn=0,crit=0,cond=0,det=0,enr=0;
+    for(i=0;i<studentsData.length;i++){
+      if(studentsData[i].dept!==dept) continue;
+      enr++;
+      var st=calculateBunkBudget(studentsData[i]);
+      ta+=st.totalAttended; tc+=st.totalConducted;
+      if(st.status==='SAFE') safe++; else if(st.status==='WARNING') warn++; else crit++;
+      if(st.currentPct>=65 && st.currentPct<75) cond++;
+      if(st.currentPct<65) det++;
+    }
+    out.push({dept:dept,enrolled:enr,avgPct: tc>0?Number(((ta/tc)*100).toFixed(1)):0,safe:safe,warn:warn,crit:crit,condonCandidates:cond,detentionRisk:det});
+  }
+  return out;
+}
+function renderDeptReports(){
+  var data=getDepartmentAggregates(), i, html='';
+  for(i=0;i<data.length;i++){
+    var d=data[i];
+    var avgC = d.avgPct<75 ? '#b42318' : '#3D5C6D';
+    html+='<div class="card dept-card" style="border-top-color:'+deptColor(d.dept)+'"><div style="display:flex;justify-content:space-between;align-items:center"><h4>'+esc(d.dept)+'</h4><span class="dept-avg mono" style="color:'+avgC+'">'+d.avgPct+'%</span></div><div class="dept-sub">'+d.enrolled+' students . Average attendance</div><div class="dept-mini"><div style="background:#e0efec;color:#245e53">'+d.safe+' safe</div><div style="background:#e9e5f1;color:#5b4e7a">'+d.warn+' warn</div><div style="background:#fdeeee;color:#b42318">'+d.crit+' crit</div></div></div>';
+  }
+  document.getElementById('dept-summary-cards').innerHTML=html;
+  var thtml='';
+  for(i=0;i<data.length;i++){
+    var r=data[i];
+    thtml+='<tr style="cursor:default"><td style="font-weight:800"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+deptColor(r.dept)+';margin-right:6px"></span>'+esc(r.dept)+'</td><td style="text-align:center" class="mono">'+r.enrolled+'</td><td style="text-align:center;font-weight:800" class="mono">'+r.avgPct+'%</td><td style="text-align:center;font-weight:800;color:#2f7a6b" class="mono">'+r.safe+'</td><td style="text-align:center;font-weight:800;color:#766993" class="mono">'+r.warn+'</td><td style="text-align:center;font-weight:800;color:#b42318" class="mono">'+r.crit+'</td><td style="text-align:center;font-weight:800;color:#766993" class="mono">'+r.condonCandidates+'</td><td style="text-align:center" class="mono">'+r.detentionRisk+'</td></tr>';
+  }
+  document.getElementById('dept-table-body').innerHTML=thtml;
+  renderPlainCharts();
+}
+function riskDonutSVG(safe,warn,crit){
+  var total=safe+warn+crit||1, r=54, c=2*Math.PI*r;
+  var safeLen=c*safe/total, warnLen=c*warn/total, critLen=c*crit/total;
+  var s='<svg viewBox="0 0 140 140" style="width:180px;height:180px;display:block;margin:0 auto" role="img">';
+  s+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="#eef3f4" stroke-width="18"/>';
+  s+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="#65909D" stroke-width="18" stroke-dasharray="'+safeLen.toFixed(1)+' '+c.toFixed(1)+'" stroke-dashoffset="'+(c*0.25).toFixed(1)+'"/>';
+  s+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="#766993" stroke-width="18" stroke-dasharray="'+warnLen.toFixed(1)+' '+c.toFixed(1)+'" stroke-dashoffset="'+(c*0.25-safeLen).toFixed(1)+'"/>';
+  s+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="#b42318" stroke-width="18" stroke-dasharray="'+critLen.toFixed(1)+' '+c.toFixed(1)+'" stroke-dashoffset="'+(c*0.25-safeLen-warnLen).toFixed(1)+'"/>';
+  s+='<text x="70" y="66" text-anchor="middle" font-size="22" font-weight="800" fill="#3D5C6D">'+total+'</text><text x="70" y="84" text-anchor="middle" font-size="11" fill="#637a86">students</text></svg>';
+  return s;
+}
+function renderPlainCharts(){
+  var s=0,w=0,c=0,i;
+  for(i=0;i<studentsData.length;i++){ var st=calculateBunkBudget(studentsData[i]); if(st.status==='SAFE') s++; else if(st.status==='WARNING') w++; else c++; }
+  var rw=document.getElementById('risk-chart-wrap');
+  if(rw){ rw.innerHTML=riskDonutSVG(s,w,c)+'<div style="display:flex;gap:8px;justify-content:center;margin-top:10px;font-size:11px;font-weight:700"><span style="background:#e0efec;color:#245e53;padding:4px 10px;border-radius:999px">'+s+' safe</span><span style="background:#e9e5f1;color:#5b4e7a;padding:4px 10px;border-radius:999px">'+w+' warning</span><span style="background:#fdeeee;color:#b42318;padding:4px 10px;border-radius:999px">'+c+' critical</span></div>'; }
+  var data=getDepartmentAggregates();
+  var dw=document.getElementById('dept-chart-wrap');
+  if(dw){
+    var html='';
+    for(i=0;i<data.length;i++){
+      var d=data[i];
+      var width=Math.max(4,Math.min(100,(d.avgPct-50)/50*100));
+      var col=deptColor(d.dept);
+      html+='<div class="dept-bar-row"><span>'+esc(d.dept)+'</span><div class="dept-bar-track"><div class="dept-bar-fill" style="width:'+width.toFixed(1)+'%;background:'+col+'"></div></div><span class="mono">'+d.avgPct+'%</span></div>';
+    }
+    html+='<div style="font-size:11px;color:#637a86">Scale from 50% to 100%. Target is 75%.</div>';
+    dw.innerHTML=html;
+  }
+}
+function printReport(){ window.print(); }
+
+/* ===== CSV ===== */
+function exportToCSV(){
+  var csv="Id,Name,RollNo,Dept,Mentor,ML_Attended,OS_Attended,DSA_Attended,Maths_Attended,TotalAttended,TotalConducted,Percentage,BunkBudget,RecoveryNeeded,Status,ShortageWeek\n";
+  for(var i=0;i<studentsData.length;i++){
+    var s=studentsData[i], st=calculateBunkBudget(s);
+    function g(code){ for(var j=0;j<s.subjects.length;j++){ if(s.subjects[j].code===code) return s.subjects[j].attended; } return 0; }
+    csv+='"'+s.id+'","'+s.name+'","'+s.rollNo+'","'+s.dept+'","'+s.mentor+'",'+g('ML')+','+g('OS')+','+g('DSA')+','+g('Maths')+','+st.totalAttended+','+st.totalConducted+','+st.currentPct+','+st.bunkBudget+','+st.recoveryRequired+',"'+st.status+'","'+(st.shortageWeek===null?'None':st.shortageWeek)+'"\n';
+  }
+  var blob=new Blob([csv],{type:'text/csv'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='EduNexa_Report_Week8_'+new Date().toISOString().split('T')[0]+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showToast('CSV report exported successfully.','success');
+}
+function handleCSVImport(e){
+  var f=e.target.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    try{
+      var lines=ev.target.result.split(/\r\n|\n/).filter(function(l){ return l.trim()!==''; });
+      if(lines.length<=1){ showToast('CSV appears empty.','error'); return; }
+      var imp=[];
+      for(var i=1;i<lines.length;i++){
+        var row=lines[i].split(',').map(function(x){ return x.replace(/(^"|"$)/g,'').trim(); });
+        if(row.length<9) continue;
+        var id=row[0],name=row[1],rollNo=row[2],dept=row[3],mentor=row[4],ml=row[5],os=row[6],dsa=row[7],maths=row[8];
+        function mk(code,att){
+          att=Math.max(0,Math.min(32,parseInt(att,10)||0));
+          var base=Math.floor(att/8), rem=att%8, tr=[];
+          for(var k=0;k<8;k++){ var v=base; if(rem>0&&v<4){ rem--; v++; } tr.push(v); }
+          var nm=code==='ML'?'Machine learning':code==='OS'?'Operating systems':code==='DSA'?'Data structures':'Discrete mathematics';
+          return {code:code,name:nm,attended:att,conducted:32,trend:tr};
+        }
+        var dd=['CSE','IT','ECE','MECH'].indexOf(dept)>=0?dept:'CSE';
+        imp.push({id:id||('STU-'+(200+i)),name:name||('Student '+i),rollNo:rollNo||('21XX'+i),dept:dd,mentor:mentor||'Dr. Mentor',mentorEmail:'mentor@college.edu',parentPhone:'+91 90000-00000',subjects:[mk('ML',ml),mk('OS',os),mk('DSA',dsa),mk('Maths',maths)]});
+      }
+      if(!imp.length){ showToast('No valid rows found.','error'); return; }
+      studentsData=imp; selectedStudentId=imp[0].id; selectedAlertStudentId=imp[0].id;
+      refreshAll(); showToast('Imported '+imp.length+' students from CSV.','success');
+    }catch(err){ showToast('Failed to parse CSV.','error'); }
+    e.target.value='';
+  };
+  r.readAsText(f);
+}
+function downloadSampleCSV(){
+  var csv='Id,Name,RollNo,Dept,Mentor,ML_Attended,OS_Attended,DSA_Attended,Maths_Attended\n"STU-201","Sample student","21CS201","CSE","Dr. K. Raman",28,27,26,25\n';
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='EduNexa_Sample_Template.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showToast('Sample CSV template downloaded.','info');
+}
+function resetDefaultData(){
+  if(!window.confirm('Reset all Edunexa memory to default week 8 snapshot?')) return;
+  studentsData=JSON.parse(JSON.stringify(DEFAULT_STUDENTS));
+  condonationApplications=JSON.parse(JSON.stringify(DEFAULT_CONDON));
+  selectedStudentId='STU-104'; selectedAlertStudentId='STU-104'; alertDispatchLogs=[];
+  document.getElementById('dispatch-log').innerHTML='<div>[System initialised] Week 8 mid term snapshot loaded. 12 student records monitored by Edunexa engine.</div>';
+  refreshAll(); showToast('Memory reset to default dataset.','info');
+}
+function refreshAll(){
+  updateKPISummaries(); renderStudentsTable(); renderStudentDetail(selectedStudentId);
+  renderAlertsQueue(); renderCondonationTab(); renderDeptReports();
+}
+
+/* ===== modal ===== */
+function openDocsModal(){ var m=document.getElementById('docs-modal'); m.classList.remove('hidden'); }
+function closeDocsModal(){ var m=document.getElementById('docs-modal'); m.classList.add('hidden'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeDocsModal(); });
+document.addEventListener('click',function(e){ if(e.target && e.target.id==='docs-modal') closeDocsModal(); });
+
+document.addEventListener('DOMContentLoaded',function(){
+  refreshAll(); switchTab('students');
+  setTimeout(function(){ showToast('Welcome to Edunexa. Week 8 audit loaded. 9 students need attention.','warn'); },600);
+});
+</script>
+</body>
+</html>
